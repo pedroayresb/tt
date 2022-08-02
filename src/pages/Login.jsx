@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Loading from '../components/Loading';
 import { createUser } from '../services/userAPI';
+import Loading from '../components/Loading';
 
 export default class Login extends Component {
   constructor() {
