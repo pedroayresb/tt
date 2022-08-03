@@ -12,8 +12,8 @@ export default class Album extends Component {
     this.state = {
       loading: true,
       musics: [],
-      artist: 'carregando...',
-      album: 'carregando...',
+      artist: '',
+      album: '',
     };
   }
 
@@ -24,6 +24,7 @@ export default class Album extends Component {
       this.setState({ musics: response,
         artist: response[0].artistName,
         album: response[0].collectionName,
+        cover: response[0].artworkUrl100,
         loading: false });
     });
   }
@@ -34,7 +35,10 @@ export default class Album extends Component {
   // }
 
   render() {
-    const { loading, musics, artist, album } = this.state;
+    const { loading, musics, artist, album, cover } = this.state;
+    const filtered = musics.filter((music) => music.wrapperType !== 'collection');
+    console.log(musics);
+    console.log(filtered);
     if (loading === true) {
       return (
         <div data-testid="page-album">
@@ -48,12 +52,16 @@ export default class Album extends Component {
         <Header />
         <h1>Album</h1>
         {musics.length > 0
-            && musics.map((music, i) => (<MusicCard
-              key={ i }
-              music={ music }
-              artist={ artist }
-              album={ album }
-            />))}
+          && (
+            <div>
+              <img src={ cover } alt={ album } />
+              <p data-testid="artist-name">{artist}</p>
+              <p data-testid="album-name">{album}</p>
+              {filtered.map((m, i) => (<MusicCard
+                key={ i }
+                music={ m }
+              />))}
+            </div>)}
       </div>
     );
   }
