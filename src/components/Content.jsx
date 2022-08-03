@@ -9,7 +9,7 @@ import Profile from '../pages/Profile';
 import Album from '../pages/Album';
 import Edit from '../pages/Edit';
 import Favorites from '../pages/Favorites';
-import NotFound from '../pages/NotFound';
+// import NotFound from '../pages/NotFound';
 
 export default class Content extends Component {
   constructor() {
@@ -72,7 +72,6 @@ export default class Content extends Component {
               path="/profile/edit"
               component={ () => <Edit username={ user } /> }
             />
-            <Route exact path="/*" component={ NotFound } />
           </div>
         </Switch>
       </main>
