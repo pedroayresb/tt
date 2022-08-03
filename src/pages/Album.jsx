@@ -10,28 +10,21 @@ export default class Album extends Component {
     super();
 
     this.state = {
-      loading: false,
-      artist: '',
-      album: '',
-      albumCover: '',
+      loading: true,
       musics: [],
+      artist: 'carregando...',
+      album: 'carregando...',
     };
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     this.setState({ loading: true }, async () => {
-      const location = window.location.href;
-      const id = location.split('album/')[1];
+      const { match: { params: { id } } } = this.props;
       const response = await getMusics(id);
-      this.setState(
-        { musics: response,
-          album: response[0].collectionName,
-          artist: response[0].artistName,
-          albumCover: response[0].artworkUrl100,
-        }, () => {
-          this.setState({ loading: false });
-        },
-      );
+      this.setState({ musics: response,
+        artist: response[0].artistName,
+        album: response[0].collectionName,
+        loading: false });
     });
   }
 
@@ -41,29 +34,37 @@ export default class Album extends Component {
   // }
 
   render() {
-    const { username } = this.props;
-    const { loading, musics, album, artist, albumCover } = this.state;
-    if (loading) {
-      return <Loading />;
+    const { loading, musics, artist, album } = this.state;
+    if (loading === true) {
+      return (
+        <div data-testid="page-album">
+          <Header />
+          <Loading />
+        </div>
+      );
     }
     return (
-      <div>
-        <Header username={ username } />
-        <div data-testid="page-album">
-          <h1>Album</h1>
-          <img src={ albumCover } alt={ album } />
-          <p data-testid="album-name">{ album }</p>
-          <p data-testid="artist-name">{ artist }</p>
-          {musics.length > 0
-            && musics.map((music, i) => <MusicCard key={ i } music={ music } />)}
-        </div>
+      <div data-testid="page-album">
+        <Header />
+        <h1>Album</h1>
+        {musics.length > 0
+            && musics.map((music, i) => (<MusicCard
+              key={ i }
+              music={ music }
+              artist={ artist }
+              album={ album }
+            />))}
       </div>
     );
   }
 }
 
 Album.propTypes = {
-  username: propTypes.string.isRequired,
+  match: propTypes.shape({
+    params: propTypes.shape({
+      id: propTypes.string.isRequired,
+    }).isRequired,
+  }).isRequired,
   // history: propTypes.shape({
   //   push: propTypes.func.isRequired,
   // }).isRequired,

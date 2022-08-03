@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import propTypes from 'prop-types';
 import Header from '../components/Header';
 import searchAlbumsAPI from '../services/searchAlbumsAPI';
 import Loading from '../components/Loading';
@@ -42,12 +41,11 @@ export default class Search extends Component {
   }
 
   render() {
-    const { username } = this.props;
     const { isSaveButtonDisabled, loading, artistAlbums, artist } = this.state;
 
     return (
       <div>
-        <Header username={ username } />
+        <Header />
         <div data-testid="page-search">
           <form>
             <label htmlFor="artist">
@@ -103,7 +101,3 @@ export default class Search extends Component {
     );
   }
 }
-
-Search.propTypes = {
-  username: propTypes.string.isRequired,
-};

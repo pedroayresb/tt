@@ -3,20 +3,25 @@ import propTypes from 'prop-types';
 
 export default class MusicCard extends Component {
   render() {
-    const { music } = this.props;
-    if (music.wrapperType === 'track') {
+    const { music, artist, album } = this.props;
+    if (music.wrapperType === 'collection') {
       return (
-        <div className="music-card">
-          <h1>{ music.trackName }</h1>
-          <audio data-testid="audio-component" src={ music.previewUrl } controls>
-            <track kind="captions" />
-            O seu navegador não suporta o elemento
-            <code>audio</code>
-          </audio>
+        <div>
+          <p data-testid="artist-name">{artist}</p>
+          <p data-testid="album-name">{album}</p>
         </div>
       );
     }
-    return null;
+    return (
+      <div className="music-card">
+        <h1>{ music.trackName }</h1>
+        <audio data-testid="audio-component" src={ music.previewUrl } controls>
+          <track kind="captions" />
+          O seu navegador não suporta o elemento
+          <code>audio</code>
+        </audio>
+      </div>
+    );
   }
 }
 
@@ -26,4 +31,6 @@ MusicCard.propTypes = {
     trackName: propTypes.string.isRequired,
     previewUrl: propTypes.string.isRequired,
   }).isRequired,
+  artist: propTypes.string.isRequired,
+  album: propTypes.string.isRequired,
 };
