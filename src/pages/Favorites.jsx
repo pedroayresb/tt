@@ -8,7 +8,7 @@ export default class Favorites extends Component {
   constructor() {
     super();
     this.state = {
-      favorites: [],
+      loading: true,
     };
     this.removeFavorite = this.removeFavorite.bind(this);
   }
@@ -23,8 +23,9 @@ export default class Favorites extends Component {
   removeFavorite(event) {
     this.setState({ loading: true }, async () => {
       const { id } = event.target;
+      const response = await getMusics(id);
+      await removeSong(response[0]);
       const favorites = await getFavoriteSongs();
-      const is = favoriteSongs.some((song) => song.trackId === trackId);
       this.setState({ favorites, loading: false });
     });
   }
@@ -42,7 +43,7 @@ export default class Favorites extends Component {
           {favorites.map((m, i) => (<MusicCard
             key={ i }
             music={ m }
-            addSong={ this.removeFavorite }
+            favorites={ favorites }
           />))}
         </div>
       </div>
