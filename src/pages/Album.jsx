@@ -17,7 +17,7 @@ export default class Album extends Component {
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     this.setState({ loading: true }, async () => {
       const { match: { params: { id } } } = this.props;
       const response = await getMusics(id);
@@ -29,29 +29,24 @@ export default class Album extends Component {
     });
   }
 
-  // handleClickBack = () => {
-  //   const { history } = this.props;
-  //   history.push('/search');
-  // }
-
   render() {
     const { loading, musics, artist, album, cover } = this.state;
     const filtered = musics.filter((music) => music.wrapperType !== 'collection');
-    console.log(musics);
-    console.log(filtered);
     if (loading === true) {
       return (
-        <div data-testid="page-album">
+        <div>
           <Header />
-          <Loading />
+          <div data-testid="page-album">
+            <Loading />
+          </div>
         </div>
       );
     }
     return (
-      <div data-testid="page-album">
+      <div>
         <Header />
-        <h1>Album</h1>
-        {musics.length > 0
+        <div data-testid="page-album">
+          {musics.length > 0
           && (
             <div>
               <img src={ cover } alt={ album } />
@@ -62,6 +57,7 @@ export default class Album extends Component {
                 music={ m }
               />))}
             </div>)}
+        </div>
       </div>
     );
   }
@@ -73,7 +69,4 @@ Album.propTypes = {
       id: propTypes.string.isRequired,
     }).isRequired,
   }).isRequired,
-  // history: propTypes.shape({
-  //   push: propTypes.func.isRequired,
-  // }).isRequired,
 };
