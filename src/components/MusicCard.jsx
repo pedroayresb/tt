@@ -23,7 +23,7 @@ export default class MusicCard extends Component {
   }
 
   async addFavorite(event) {
-    const { id } = event.target;
+    const { id } = this.state;
     this.setState({ loading: true }, async () => {
       if (event.target.checked === true) {
         const response = await getMusics(id);
@@ -38,13 +38,38 @@ export default class MusicCard extends Component {
   }
 
   render() {
-    const { music } = this.props;
+    const { music, removeFavorite } = this.props;
     const { isChecked, loading } = this.state;
     if (loading) {
       return <Loading />;
     }
     if (music.previewUrl === undefined) {
       return null;
+    }
+    if (removeFavorite !== undefined) {
+      return (
+        <div className="music-card">
+          <h1>{ music.trackName }</h1>
+          <audio data-testid="audio-component" src={ music.previewUrl } controls>
+            <track kind="captions" />
+            O seu navegador não suporta o elemento
+            <code>audio</code>
+          </audio>
+          <label
+            htmlFor="audio-component"
+            id={ music.trackId }
+          >
+            Favorita
+            <input
+              type="checkbox"
+              data-testid={ `checkbox-music-${music.trackId}` }
+              onChange={ removeFavorite }
+              checked={ isChecked }
+              id="audio-component"
+            />
+          </label>
+        </div>
+      );
     }
     return (
       <div className="music-card">
@@ -70,6 +95,9 @@ export default class MusicCard extends Component {
     );
   }
 }
+MusicCard.defaultProps = {
+  removeFavorite: undefined,
+};
 
 MusicCard.propTypes = {
   music: propTypes.shape({
@@ -81,4 +109,5 @@ MusicCard.propTypes = {
   favorites: propTypes.arrayOf(propTypes.shape({
     some: propTypes.func,
   }).isRequired).isRequired,
+  removeFavorite: propTypes.func,
 };
