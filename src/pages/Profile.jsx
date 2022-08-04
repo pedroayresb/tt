@@ -27,18 +27,21 @@ export default class Profile extends Component {
   render() {
     const { loading, user } = this.state;
     if (loading) {
-      return <Loading />;
+      return (
+        <div data-testid="page-profile">
+          <Header />
+          <Loading />
+        </div>
+      );
     }
     return (
-      <div>
+      <div data-testid="page-profile">
         <Header />
-        <div data-testid="page-profile">
-          <h1>Profile</h1>
-          <img src={ user.image } alt={ user.name } />
-          <p>{user.name}</p>
-          <p>{user.email}</p>
-          <p>{user.description}</p>
-        </div>
+        <h1>Profile</h1>
+        <img src={ user.image } alt={ user.name } />
+        <p>{user.name}</p>
+        <p>{user.email}</p>
+        <p>{user.description}</p>
       </div>
     );
   }
