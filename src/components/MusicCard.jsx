@@ -15,11 +15,9 @@ export default class MusicCard extends Component {
 
   async componentDidMount() {
     const { music, favorites } = this.props;
-    const { id } = this.state;
     const { trackId } = music;
     const is = favorites.some((song) => song.trackId === trackId);
     this.setState({ isChecked: is });
-    console.log(id);
   }
 
   async addFavorite(event) {
