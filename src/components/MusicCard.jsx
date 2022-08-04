@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import propTypes from 'prop-types';
-import { addSong, removeSong, getFavoriteSongs } from '../services/favoriteSongsAPI';
+import { addSong, removeSong } from '../services/favoriteSongsAPI';
 import getMusics from '../services/musicsAPI';
 import Loading from './Loading';
 
@@ -14,12 +14,12 @@ export default class MusicCard extends Component {
   }
 
   async componentDidMount() {
+    const { music, favorites } = this.props;
     const { id } = this.state;
-    const favoriteSongs = await getFavoriteSongs();
-    const music = await getMusics(id);
-    const { trackId } = music[0];
-    const is = favoriteSongs.some((song) => song.trackId === trackId);
+    const { trackId } = music;
+    const is = favorites.some((song) => song.trackId === trackId);
     this.setState({ isChecked: is });
+    console.log(id);
   }
 
   async addFavorite(event) {
@@ -78,4 +78,7 @@ MusicCard.propTypes = {
     previewUrl: propTypes.string.isRequired,
     trackId: propTypes.number.isRequired,
   }).isRequired,
+  favorites: propTypes.arrayOf(propTypes.shape({
+    some: propTypes.func,
+  }).isRequired).isRequired,
 };

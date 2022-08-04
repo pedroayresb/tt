@@ -4,6 +4,7 @@ import Header from '../components/Header';
 import getMusics from '../services/musicsAPI';
 import MusicCard from '../components/MusicCard';
 import Loading from '../components/Loading';
+import { getFavoriteSongs } from '../services/favoriteSongsAPI';
 
 export default class Album extends Component {
   constructor() {
@@ -18,6 +19,8 @@ export default class Album extends Component {
   }
 
   async componentDidMount() {
+    const favoriteSongs = await getFavoriteSongs();
+    this.setState({ favorites: favoriteSongs });
     this.setState({ loading: true }, async () => {
       const { match: { params: { id } } } = this.props;
       const response = await getMusics(id);
@@ -25,12 +28,13 @@ export default class Album extends Component {
         artist: response[0].artistName,
         album: response[0].collectionName,
         cover: response[0].artworkUrl100,
+        favorites: favoriteSongs,
         loading: false });
     });
   }
 
   render() {
-    const { loading, musics, artist, album, cover } = this.state;
+    const { loading, musics, artist, album, cover, favorites } = this.state;
     const filtered = musics.filter((music) => music.wrapperType !== 'collection');
     if (loading === true) {
       return (
@@ -55,6 +59,7 @@ export default class Album extends Component {
               {filtered.map((m, i) => (<MusicCard
                 key={ i }
                 music={ m }
+                favorites={ favorites }
               />))}
             </div>)}
         </div>
