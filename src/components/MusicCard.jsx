@@ -93,6 +93,7 @@ export default class MusicCard extends Component {
     );
   }
 }
+
 MusicCard.defaultProps = {
   removeFavorite: undefined,
 };

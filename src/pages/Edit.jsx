@@ -53,6 +53,7 @@ export default class Edit extends Component {
           ? <Loading />
           : (
             <form>
+              <h1>Editar perfil</h1>
               <label htmlFor="edit-name">
                 Nome
                 <input
@@ -103,7 +104,7 @@ export default class Edit extends Component {
                 disabled={ isSaveButtonDisabled }
                 data-testid="edit-button-save"
               >
-                Editar perfil
+                Salvar
               </button>
             </form>
           )}
