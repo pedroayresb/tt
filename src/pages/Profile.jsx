@@ -8,7 +8,7 @@ export default class Profile extends Component {
   constructor() {
     super();
     this.state = {
-      loading: true,
+      loading: false,
       user: {
         name: '',
         email: '',
@@ -43,7 +43,9 @@ export default class Profile extends Component {
         <p>{user.name}</p>
         <p>{user.email}</p>
         <p>{user.description}</p>
-        <Link to="/profile/edit">Editar perfil</Link>
+        <Link to="/profile/edit">
+          <p>Editar perfil</p>
+        </Link>
       </div>
     );
   }

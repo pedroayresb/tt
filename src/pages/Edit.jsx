@@ -1,36 +1,40 @@
 import React, { Component } from 'react';
 import propTypes from 'prop-types';
 import Header from '../components/Header';
-import Loading from '../components/Loading';
 import { getUser, updateUser } from '../services/userAPI';
+import Loading from '../components/Loading';
 
 export default class Edit extends Component {
-  constructor() {
-    super();
-    this.state = {
-      loading: true,
-      isSaveButtonDisabled: true,
-    };
-    this.validation = this.validation.bind(this);
-    this.onInputChange = this.onInputChange.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
+  state = {
+    loading: false,
+    isSaveButtonDisabled: true,
+    name: '',
+    email: '',
+    description: '',
+    image: '',
   }
 
   componentDidMount() {
     this.setState({ loading: true }, async () => {
       const user = await getUser();
       const { name, email, description, image } = user;
-      this.setState({ name, email, description, image, loading: false });
+      this.setState({ loading: false, name, email, description, image });
     });
   }
 
-  onInputChange({ target: { name, value } }) {
+  validation = () => {
+    const { name, email, description, image } = this.state;
+    const array = [name, email, description, image];
+    return array.some((input) => input === '');
+  }
+
+  onInputChange = ({ target: { name, value } }) => {
     this.setState({ [name]: value }, () => {
       this.setState({ isSaveButtonDisabled: this.validation() });
     });
   }
 
-  onSubmit() {
+  onSubmit = () => {
     this.setState({ loading: true }, async () => {
       const { history } = this.props;
       const { name, email, description, image } = this.state;
@@ -39,63 +43,70 @@ export default class Edit extends Component {
     });
   }
 
-  validation() {
-    const { name, email, description, image } = this.state;
-    const array = [name, email, description, image];
-    return array.some((input) => input === '');
-  }
-
   render() {
     const { name, email, description, image, loading, isSaveButtonDisabled } = this.state;
-    if (loading) {
-      return (
-        <div data-testid="page-profile-edit">
-          <Header />
-          <Loading />
-        </div>
-      );
-    }
+    const { onInputChange, onSubmit } = this;
     return (
       <div data-testid="page-profile-edit">
         <Header />
-        <form>
-          <input
-            type="text"
-            data-testid="edit-input-name"
-            name="name"
-            value={ name }
-            onChange={ this.onInputChange }
-          />
-          <input
-            type="email"
-            data-testid="edit-input-email"
-            name="email"
-            value={ email }
-            onChange={ this.onInputChange }
-          />
-          <input
-            type="text"
-            data-testid="edit-input-description"
-            name="description"
-            value={ description }
-            onChange={ this.onInputChange }
-          />
-          <input
-            type="text"
-            data-testid="edit-input-image"
-            name="image"
-            value={ image }
-            onChange={ this.onInputChange }
-          />
-          <button
-            type="button"
-            data-testid="edit-button-save"
-            disabled={ isSaveButtonDisabled }
-            onClick={ this.onSubmit }
-          >
-            Save
-          </button>
-        </form>
+        { loading
+          ? <Loading />
+          : (
+            <form>
+              <label htmlFor="edit-name">
+                Nome
+                <input
+                  type="text"
+                  id="edit-name"
+                  data-testid="edit-input-name"
+                  name="name"
+                  value={ name }
+                  onChange={ onInputChange }
+                />
+              </label>
+              <label htmlFor="edit-email">
+                E-mail
+                <input
+                  type="email"
+                  data-testid="edit-input-email"
+                  id="edit-email"
+                  name="email"
+                  value={ email }
+                  onChange={ onInputChange }
+                />
+              </label>
+              <label htmlFor="edit-description">
+                Descricao
+                <textarea
+                  type="text"
+                  data-testid="edit-input-description"
+                  name="description"
+                  id="edit-description"
+                  value={ description }
+                  onChange={ onInputChange }
+                />
+              </label>
+              <label htmlFor="edit-image">
+                Image
+                <input
+                  type="text"
+                  data-testid="edit-input-image"
+                  name="image"
+                  id="edit-image"
+                  value={ image }
+                  onChange={ onInputChange }
+                />
+              </label>
+              <button
+                type="submit"
+                onClick={ onSubmit }
+                disabled={ isSaveButtonDisabled }
+                data-testid="edit-button-save"
+              >
+                Editar perfil
+              </button>
+            </form>
+          )}
       </div>
     );
   }
